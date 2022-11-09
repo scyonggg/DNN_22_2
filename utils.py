@@ -14,21 +14,31 @@ from dataset.dataset import CUB_200_2011_Train, CUB_200_2011_Test
 
 def get_network(args):
     ## To DO : ResNet 추가
-    if args.net == 'vgg16':
-        from models.vgg import vgg16
-        net = vgg16()
+    # if args.net == 'vgg16':
+    #     from models.vgg import vgg16
+    #     net = vgg16()
 
-    elif args.net == 'vgg11':
-        from models.vgg import vgg11
-        net = vgg11()
+    # elif args.net == 'vgg11':
+    #     from models.vgg import vgg11
+    #     net = vgg11()
     
-    elif args.net == 'vgg13':
-        from models.vgg import vgg13
-        net = vgg13()
+    # elif args.net == 'vgg13':
+    #     from models.vgg import vgg13
+    #     net = vgg13()
     
-    elif args.net == 'vgg19':
-        from models.vgg import vgg19
-        net = vgg19()
+    # elif args.net == 'vgg19':
+    #     from models.vgg import vgg19
+    #     net = vgg19()
+
+    if args.net == 'resnet50':
+        import timm
+        print(f'Import resnet50 model from timm')
+        net = timm.create_model('resnet50')
+
+    elif args.net == 'resnet152':
+        import timm
+        print(f'Import resnet152 model from timm')
+        net = timm.create_model('resnet152')
 
     return net
 
