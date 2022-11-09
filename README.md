@@ -4,7 +4,8 @@
 2. wandb를 사용할 경우
   a. `script.sh`에 --wandb를 추가
   b. 터미널에 wandb login 입력 후, wandb 홈페이지에서 API Keys를 복-붙
-3. wandb에 잘 올라오는지 확인
+3. script에 옵션들 확인 후 `bash script.sh`
+4. wandb에 잘 올라오는지 확인
 
 ## To DO
 1. 도커 업데이트 or 콘다 업데이트
