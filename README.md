@@ -1,3 +1,17 @@
+# Quick Start
+
+1. `conf/settings.py`에서 DATA_PATH를 train dataset 위치로 수정
+2. wandb를 사용할 경우
+  a. `script.sh`에 --wandb를 추가
+  b. 터미널에 wandb login 입력 후, wandb 홈페이지에서 API Keys를 복-붙
+3. wandb에 잘 올라오는지 확인
+
+## To DO
+1. 도커 업데이트 or 콘다 업데이트
+2. requirement 업로드
+
+---
+
 # Bag of Tricks for Image Classification with Convolutional Neural Networks 
 
 
