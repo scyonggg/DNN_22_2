@@ -25,9 +25,9 @@ if __name__ == '__main__':
     parser.add_argument('--net', type=str, required=True, help='net type')
     parser.add_argument('--num_workers', type=int, default=2, help='number of workers for dataloader')
     parser.add_argument('--batch_size', type=int, default=256, help='batch size for dataloader')
-    parser.add_argument('--loss', type=str, default='label_smooth', choices=['label_smooth'], help='loss function')
+    parser.add_argument('--loss', type=str, default='label_smooth', choices=['label_smooth', 'ce', 'focal'], help='loss function')
     parser.add_argument('--weight_decay', action='store_true', help='1-D. No bias decay (regularization)')
-    parser.add_argument('--optimizer', type=str, default='SGD', choices=['SGD', 'AdamW'], help='Optimizer')
+    parser.add_argument('--optimizer', type=str, default='SGD', choices=['SGD', 'AdamW', 'RMSProp'], help='Optimizer')
     parser.add_argument('--lr', type=float, default=0.04, help='learning rate')
     parser.add_argument('--init_lr', type=float, default=0.001, help='initial learning rate when using learning rate scheduler')
     parser.add_argument('--decay_rate', type=float, default=0.9, help='learning rate decay rate when using multi-step LR scheduler')
@@ -109,6 +109,11 @@ if __name__ == '__main__':
     #cross_entropy = nn.CrossEntropyLoss() 
     if args.loss == 'label_smooth':
         lsr_loss = LSR()  # Label smoothing
+    elif args.loss == 'ce':
+        lsr_loss = nn.CrossEntropyLoss()
+    elif args.loss == 'focal':
+        from kornia.losses import FocalLoss
+        lsr_loss = FocalLoss(alpha = 0.5)
         
     #apply no weight decay on bias
     if args.weight_decay:
@@ -120,6 +125,8 @@ if __name__ == '__main__':
         optimizer = optim.SGD(params, lr=args.lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
     elif args.optimizer == 'AdamW':
         optimizer = optim.AdamW(params, lr=args.lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01)
+    elif args.optimizer == 'RMSProp':
+        optimizer = optim.RMSprop(params, lr=args.lr)
 
     # warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
     if args.lr_scheduler == 'cosinelr':
