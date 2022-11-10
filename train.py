@@ -60,6 +60,7 @@ if __name__ == '__main__':
     if args.wandb:
         import wandb
         wandb.init(project='test', entity="dnn_22_2", name=args.run_name, settings=wandb.Settings(code_dir="."))
+        wandb.run.log_code(".")
 
     #get dataloader
     train_transforms = transforms.Compose([
@@ -152,11 +153,11 @@ if __name__ == '__main__':
             if batch_index % args.log_step == 0:
                 print(f'Epoch : [{epoch} / {args.epochs}], \tIter : [{batch_index} / {num_iters}], \tLoss : {loss.item()}')
                 if args.wandb:
-                    wandb.log({'Epoch' : epoch, 'Iter' : batch_index, 'Loss': loss.item()})
+                    wandb.log({'Epoch' : epoch, 'Iter' : batch_index, 'Train Loss': loss.item()})
             
         warmup_scheduler.step(epoch)
         if args.wandb:
-            wandb.log({'Epoch' : epoch, 'LR' : optimizer.param_groups[0]['lr']})
+            wandb.log({'LR' : optimizer.param_groups[0]['lr']})
 
         if epoch % args.val_step == 0:
             net.eval()
@@ -179,7 +180,7 @@ if __name__ == '__main__':
             acc = correct / len(test_dataloader.dataset)
             print('Test set: loss: {:.4f}, Accuracy: {:.4f}'.format(test_loss, acc))
             if args.wandb:
-                wandb.log({'Epoch': epoch, 'Loss': test_loss, 'acc': acc})
+                wandb.log({'Validation Loss': test_loss, 'Validation acc': acc})
 
         #save weights file
         if epoch % args.save_step == 0:
