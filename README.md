@@ -9,8 +9,7 @@
 
 ## Steps
 **0. train.py의 parser 옵션들 필독할 것. 잘 이해 안되는 옵션은 물어보세요**
-https://github.com/scyonggg/DNN_22_2/blob/47ca6215bf4d6478598df74b362e924b1d1735aa/train.py#L24-L42
-
+https://github.com/scyonggg/DNN_22_2/blob/de3d5b7ee8b224c5f3ca8c8c50be233a42632513/train.py#L24-L44
 
 1. `conf/settings.py`에서 DATA_PATH를 train dataset 위치로 수정
 2. wandb를 사용할 경우
