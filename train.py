@@ -41,6 +41,8 @@ if __name__ == '__main__':
     parser.add_argument('--run_name', type=str, default='scy_exp3', help='wandb run name')
     args = parser.parse_args()
 
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
+
     #checkpoint directory
     checkpoint_path = os.path.join(settings.CHECKPOINT_PATH, args.net, settings.TIME_NOW)
     if not os.path.exists(checkpoint_path):
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     
     if args.wandb:
         import wandb
-        wandb.init(project='test', entity="dnn_22_2", name=args.run_name, settings=wandb.Settings(code_dir="."))
+        wandb.init(project='scy_test', entity="dnn_22_2", name=args.run_name, settings=wandb.Settings(code_dir="."))
         wandb.run.log_code(".")
 
     #get dataloader
