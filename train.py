@@ -28,7 +28,9 @@ if __name__ == '__main__':
     parser.add_argument('--loss', type=str, default='label_smooth', choices=['label_smooth'], help='loss function')
     parser.add_argument('--weight_decay', action='store_true', help='1-D. No bias decay (regularization)')
     parser.add_argument('--optimizer', type=str, default='SGD', choices=['SGD', 'AdamW'], help='Optimizer')
-    parser.add_argument('--lr', type=float, default=0.04, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=0.04, help='learning rate')
+    parser.add_argument('--init_lr', type=float, default=0.001, help='initial learning rate when using learning rate scheduler')
+    parser.add_argument('--decay_rate', type=float, default=0.9, help='learning rate decay rate when using multi-step LR scheduler')
     parser.add_argument('--lr_scheduler', type=str, default='cosinelr', choices=['cosinelr', 'steplr'], help='learning rate scheduler')
     parser.add_argument('--epochs', type=int, default=450, help='training epoches')
     parser.add_argument('--warm_t', type=int, default=5, help='warm up phase')
@@ -121,9 +123,9 @@ if __name__ == '__main__':
 
     # warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
     if args.lr_scheduler == 'cosinelr':
-        warmup_scheduler = CosineLRScheduler(optimizer, t_initial=args.epochs, warmup_t=args.warm_t, warmup_lr_init=1e-4)
+        warmup_scheduler = CosineLRScheduler(optimizer, t_initial=args.epochs, warmup_t=args.warm_t, warmup_lr_init=args.init_lr)
     elif args.lr_scheduler == 'steplr':
-        warmup_scheduler = StepLRScheduler(optimizer, decay_t=args.decay_t, warmup_t=args.warm_t, warmup_lr_init=1e-4, decay_rate=0.9)
+        warmup_scheduler = StepLRScheduler(optimizer, decay_t=args.decay_t, warmup_t=args.warm_t, warmup_lr_init=args.init_lr, decay_rate=args.decay_rate)
 
     #set up training phase learning rate scheduler
     # train_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=settings.MILESTONES)
