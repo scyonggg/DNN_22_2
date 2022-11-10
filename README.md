@@ -5,6 +5,7 @@
   timm
   wandb
   pytorch
+  kornia
   ```
 
 ## Steps
