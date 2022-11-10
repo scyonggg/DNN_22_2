@@ -1,8 +1,3 @@
-
-"""author 
-   baiyu
-"""
-
 import argparse
 import glob
 import os
