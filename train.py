@@ -159,27 +159,28 @@ if __name__ == '__main__':
             wandb.log({'LR' : optimizer.param_groups[0]['lr']})
 
         if epoch % args.val_step == 0:
-            net.eval()
+            with torch.no_grad():
+                net.eval()
 
-            total_loss = 0
-            correct = 0
-            for images, labels in test_dataloader:
+                total_loss = 0
+                correct = 0
+                for images, labels in test_dataloader:
 
-                images = images.cuda()
-                labels = labels.cuda()
+                    images = images.cuda()
+                    labels = labels.cuda()
 
-                predicts = net(images)
-                _, preds = predicts.max(1)
-                correct += preds.eq(labels).sum().float()
+                    predicts = net(images)
+                    _, preds = predicts.max(1)
+                    correct += preds.eq(labels).sum().float()
 
-                loss = lsr_loss(predicts, labels)
-                total_loss += loss.item()
+                    loss = lsr_loss(predicts, labels)
+                    total_loss += loss.item()
 
-            test_loss = total_loss / len(test_dataloader)
-            acc = correct / len(test_dataloader.dataset)
-            print('Test set: loss: {:.4f}, Accuracy: {:.4f}'.format(test_loss, acc))
-            if args.wandb:
-                wandb.log({'Validation Loss': test_loss, 'Validation acc': acc})
+                test_loss = total_loss / len(test_dataloader)
+                acc = correct / len(test_dataloader.dataset)
+                print('Test set: loss: {:.4f}, Accuracy: {:.4f}'.format(test_loss, acc))
+                if args.wandb:
+                    wandb.log({'Validation Loss': test_loss, 'Validation acc': acc})
 
         #save weights file
         if epoch % args.save_step == 0:
