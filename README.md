@@ -20,6 +20,9 @@
 1. 도커 업데이트 or 콘다 업데이트
 2. requirement 업로드
 
+$ CUDA_VISIBLE_DEVICES=0 ~~~~
+gpu 선택해서돌리기
+
 ---
 
 # Bag of Tricks for Image Classification with Convolutional Neural Networks 
