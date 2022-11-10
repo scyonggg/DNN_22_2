@@ -59,7 +59,7 @@ if __name__ == '__main__':
     
     if args.wandb:
         import wandb
-        wandb.init(project='dnn_22_2', entity="scyonggg", name=args.run_name, settings=wandb.Settings(code_dir="."))
+        wandb.init(project='test', entity="dnn_22_2", name=args.run_name, settings=wandb.Settings(code_dir="."))
 
     #get dataloader
     train_transforms = transforms.Compose([
