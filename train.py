@@ -112,7 +112,7 @@ if __name__ == '__main__':
     elif args.loss == 'ce':
         lsr_loss = nn.CrossEntropyLoss()
     elif args.loss == 'focal':
-        from kornia.losses import FocalLoss, focal_loss
+        from kornia.losses import FocalLoss
         lsr_loss = FocalLoss(alpha = 0.5, reduction='mean')
         
     #apply no weight decay on bias
