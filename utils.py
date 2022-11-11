@@ -33,12 +33,12 @@ def get_network(args):
     if args.net == 'resnet50':
         import timm
         print(f'Import resnet50 model from timm')
-        net = timm.create_model('resnet50')
+        net = timm.create_model('resnet50', num_classes=200)
 
     elif args.net == 'resnet152':
         import timm
         print(f'Import resnet152 model from timm')
-        net = timm.create_model('resnet152')
+        net = timm.create_model('resnet152', num_classes=200)
 
     return net
 
