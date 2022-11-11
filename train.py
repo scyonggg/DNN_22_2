@@ -25,9 +25,13 @@ if __name__ == '__main__':
     parser.add_argument('--net', type=str, required=True, help='net type')
     parser.add_argument('--num_workers', type=int, default=2, help='number of workers for dataloader')
     parser.add_argument('--batch_size', type=int, default=256, help='batch size for dataloader')
+    
+    parser.add_argument('--other', type=str, nargs='+', default=None, choices=['None', 'tta'], help='extra tricks to apply')
     parser.add_argument('--loss', type=str, default='label_smooth', choices=['label_smooth', 'ce', 'focal'], help='loss function')
+    
     parser.add_argument('--weight_decay', action='store_true', help='1-D. No bias decay (regularization)')
     parser.add_argument('--optimizer', type=str, default='SGD', choices=['SGD', 'AdamW', 'RMSProp'], help='Optimizer')
+    
     parser.add_argument('--lr', type=float, default=0.04, help='learning rate')
     parser.add_argument('--init_lr', type=float, default=0.001, help='initial learning rate when using learning rate scheduler')
     parser.add_argument('--decay_rate', type=float, default=0.9, help='learning rate decay rate when using multi-step LR scheduler')
@@ -36,6 +40,7 @@ if __name__ == '__main__':
     parser.add_argument('--warm_t', type=int, default=5, help='warm up phase')
     parser.add_argument('--decay_t', type=int, default=10, help='Decay LR for every decay_t epochs in StepLR')
     parser.add_argument('--gpus', type=str, default=0, help='gpu device')
+
     parser.add_argument('--log_step', type=int, default=1, help='printing loss step')
     parser.add_argument('--val_step', type=int, default=1, help='validation step')
     parser.add_argument('--save_step', type=int, default=1, help='save checkpoint step')
@@ -99,11 +104,7 @@ if __name__ == '__main__':
     net = get_network(args)
     net = init_weights(net)
 
-    
-    # if isinstance(args.gpus, int):
-    #     args.gpus = [args.gpus]
-    
-    # net = nn.DataParallel(net, device_ids=args.gpus)
+
     net = net.cuda()
 
     #cross_entropy = nn.CrossEntropyLoss() 
@@ -167,7 +168,12 @@ if __name__ == '__main__':
 
         if epoch % args.val_step == 0:
             with torch.no_grad():
-                net.eval()
+                if 'tta' in args.other:
+                    import ttach as tta
+                    tta_model = tta.ClassificationTTAWrapper(net, tta.aliases.five_crop_transform(settings.IMAGE_SIZE, settings.IMAGE_SIZE))
+                    tta_model.eval()
+                else:
+                    net.eval()
 
                 total_loss = 0
                 correct = 0
@@ -175,8 +181,10 @@ if __name__ == '__main__':
 
                     images = images.cuda()
                     labels = labels.cuda()
-
-                    predicts = net(images)
+                    if 'tta' in args.other:
+                        predicts = tta_model(images)
+                    else:
+                        predicts = net(images)
                     _, preds = predicts.max(1)
                     correct += preds.eq(labels).sum().float()
 
